@@ -21,11 +21,15 @@ package edu.eci.cvds.samples.services.client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper;
+
 
 /**
  *
@@ -58,14 +62,18 @@ public class MyBatisExample {
      * @param args
      * @throws SQLException 
      */
-    public static void main(String args[]) throws SQLException {
+    public static void main(String args[]) throws SQLException, ParseException {
 
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
         ClienteMapper cm = sqlss.getMapper(ClienteMapper.class);
         System.out.println(cm.consultarClientes());
         System.out.println(cm.consultarCliente(1));
-
+        SimpleDateFormat DateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date startDate = DateFormat.parse("12/03/2022");
+        Date endDate = DateFormat.parse("20/03/2022");
+        cm.agregarItemRentadoACliente(6, 3, startDate, endDate);
+        System.out.println(cm.consultarClientes());
         
         sqlss.commit();
         
