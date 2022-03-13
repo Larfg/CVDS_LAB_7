@@ -4,7 +4,35 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="edu.eci.cvds.sampleprj.dao.mybatis.mappers.ClienteMapper">
-    <select parameterType="map" id="consultarClientes" resultMap="ClienteResult">
+    <select parameterType="map" id="consultarCliente" resultMap="ClienteResult" >
+        select
+            c.nombre,
+            c.documento,
+            c.telefono,
+            c.direccion,
+            c.email,
+            c.vetado,
+            ir.id ,
+            ir.fechainiciorenta ,
+            ir.fechafinrenta ,
+            i.id as items_id,
+            i.nombre as items_nombre,
+            i.descripcion ,
+            i.fechalanzamiento ,
+            i.tarifaxdia ,
+            i.formatorenta ,
+            i.genero ,
+            ti.id as tipoItem_id,
+            ti.descripcion as tipoItem_descripcion
+        FROM VI_CLIENTES as c
+                 left join VI_ITEMRENTADO as ir on c.documento=ir.CLIENTES_documento
+                 left join VI_ITEMS as i on ir.ITEMS_id=i.id
+                 left join VI_TIPOITEM as ti on i.TIPOITEM_id=ti.id
+        WHERE c.documento = #{idcli}
+
+    </select>
+
+    <select parameterType="map" id="consultarClientes" resultMap="ClienteResult" >
         select
             c.nombre,
             c.documento,
@@ -30,7 +58,7 @@
         left join VI_TIPOITEM as ti on i.TIPOITEM_id=ti.id
     </select>
 
-    <resultMap type='Cliente' id='ClienteResult'>
+    <resultMap type='Cliente' id='ClienteResult' >
         <id property='documento' column='documento'/>
         <result property='nombre' column='nombre'/>
         <result property='telefono' column='telefono'/>
@@ -39,7 +67,6 @@
         <result property='vetado' column='vetado'/>
         <collection property='rentados' ofType='ItemRentado' resultMap='ItemRentadoResult' columnPrefix='itemRentado_'></collection>
     </resultMap>
-
     <resultMap type='Item' id='ItemResult'>
         <id property='id' column='ID'/>
         <result property='nombre' column='nombre'/>
@@ -50,18 +77,15 @@
         <result property='genero' column='genero'/>
         <association property="tipo" javaType="TipoItem" columnPrefix='tipoItem_'></association>
     </resultMap>
-
     <resultMap type='ItemRentado' id='ItemRentadoResult'>
         <id property='id' column='id'/>
         <result property='fechainiciorenta' column='fechainiciorenta'/>
         <result property='fechafinrenta' column='fechafinrenta'/>
         <association property="item" javaType="Item" columnPrefix='item_'></association>
     </resultMap>
-
     <resultMap type='TipoItem' id='TipoItemResult'>
         <id property='id' column='id'/>
         <result property='descripcion' column='descripcion'/>
     </resultMap>
-
           	
 </mapper>
