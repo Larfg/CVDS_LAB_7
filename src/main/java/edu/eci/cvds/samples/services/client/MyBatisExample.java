@@ -76,12 +76,7 @@ public class MyBatisExample {
         System.out.println(cm.consultarClientes());
         
         sqlss.commit();
-        
-        
         sqlss.close();
-
-        
-        
     }
 
 
