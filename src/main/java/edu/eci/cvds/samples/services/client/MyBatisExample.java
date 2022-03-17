@@ -24,6 +24,11 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemMapper;
+import edu.eci.cvds.sampleprj.dao.mybatis.mappers.ItemRentadoMapper;
+import edu.eci.cvds.samples.entities.Item;
+import edu.eci.cvds.samples.entities.TipoItem;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -63,18 +68,27 @@ public class MyBatisExample {
      * @throws SQLException 
      */
     public static void main(String args[]) throws SQLException, ParseException {
-
         SqlSessionFactory sessionfact = getSqlSessionFactory();
         SqlSession sqlss = sessionfact.openSession();
         ClienteMapper cm = sqlss.getMapper(ClienteMapper.class);
         System.out.println(cm.consultarClientes());
         System.out.println(cm.consultarCliente(1));
-        SimpleDateFormat DateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date startDate = DateFormat.parse("12/03/2022");
-        Date endDate = DateFormat.parse("20/03/2022");
-        cm.agregarItemRentadoACliente(6, 3, startDate, endDate);
+        //AGREGAMOS ITEM RENTADO
+        SimpleDateFormat DateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Date startDate = DateFormat.parse("2022/01/20");
+        Date endDate = DateFormat.parse("2022/02/20");
+        cm.agregarItemRentadoACliente(9, 20, startDate, endDate);
         System.out.println(cm.consultarClientes());
-        
+        //CONSULTAMOS ITEM AGREGADO
+        ItemRentadoMapper irm = sqlss.getMapper(ItemRentadoMapper.class);
+        System.out.println("Item Rentado:" + irm.consultarItemRentado(9,20));
+        //AGREGAMOS ITEM
+        ItemMapper im = sqlss.getMapper(ItemMapper.class);
+        Date dateItem = DateFormat.parse("2022/01/20");
+        im.insertarItem(780,"luis","Estudiante",dateItem,7000,"renta","Bichota",2);
+        //CONSULTAR ITEM
+        System.out.println("Item :" + im.consultarItem(780));
+        //CLOSE
         sqlss.commit();
         sqlss.close();
     }
